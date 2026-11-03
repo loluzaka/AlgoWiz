@@ -1,0 +1,178 @@
+ALGO VISUALIZER - PROJECT STRUCTURE
+C++17 / Qt 6 (pending approval) / Data Structures Lab project / 4 members
+
+Layers: A = algorithms and data structures, B = execution engine,
+        C = rendering, D = UI, E = plugins.
+Layers A and B never use Qt, so the project survives if Qt is not approved.
+
+Members:
+  M1 = Engine, Plugins and Linear Structures
+  M2 = Qt Shell, Themes and Panels
+  M3 = Sorting, Searching and Lists
+  M4 = Trees, Heaps and Graphs
+
+======================================================================
+DIRECTORY TREE
+======================================================================
+
+DSA_wiz/
+├── CMakeLists.txt            (to be created - M1)
+├── main.cpp                  (to be created)
+├── STRUCTURE.txt             (this file)
+│
+├── src/
+│   ├── core/                 Algorithms and data structures. NO Qt.
+│   │   ├── sorting/
+│   │   ├── searching/
+│   │   ├── strings/
+│   │   ├── lists/
+│   │   ├── linear/
+│   │   ├── hashing/
+│   │   ├── trees/
+│   │   ├── heaps/
+│   │   └── graphs/
+│   │
+│   ├── engine/               Step, StepManager, ExecutionEngine, Statistics. NO Qt.
+│   │   ├── race/             Race Mode logic
+│   │   ├── quiz/             QuizController, ScoreTracker
+│   │   └── report/           ReportExporter
+│   │
+│   ├── plugin/               CustomAlgorithm, CustomStructure, PluginRegistry,
+│   │                         PluginLoader, PluginMetadata, adapters
+│   │
+│   ├── render/               Visual layer (Qt Graphics View)
+│   │   ├── theme/
+│   │   ├── primitives/
+│   │   ├── array/
+│   │   ├── list/
+│   │   ├── linear/
+│   │   ├── hash/
+│   │   ├── tree/
+│   │   ├── heap/
+│   │   └── graph/
+│   │
+│   └── ui/                   Qt Widgets shell
+│       ├── panels/
+│       ├── dialogs/
+│       ├── race/
+│       └── quiz/
+│
+├── tests/                    One folder per module; each member tests their own
+│   ├── engine/
+│   ├── plugin/
+│   ├── linear/
+│   ├── sorting/
+│   ├── searching/
+│   ├── strings/
+│   ├── lists/
+│   ├── trees/
+│   ├── heaps/
+│   └── graphs/
+│
+└── docs/
+    ├── report/
+    └── screenshots/
+
+======================================================================
+FOLDER DETAILS
+======================================================================
+
+src/core/  (Layer A, no Qt)
+----------------------------------------------------------------------
+  sorting/     M3  Bubble, Selection, Insertion, Merge, Quick, Counting,
+                   Radix, Bucket; ascending/descending, duplicates
+  searching/   M3  Linear, Binary, Interpolation, Median (definition pending);
+                   input rules (e.g. Binary needs sorted data)
+  strings/     M3  String sorting: lexicographic, reverse, case-sensitive /
+                   insensitive, length asc/desc
+  lists/       M3  Singly, doubly, circular linked lists; insert/delete at
+                   beginning, end, position; search; traverse
+  linear/      M1  Stack, queue, circular queue (push/pop/peek, FRONT/REAR,
+                   overflow/underflow)
+  hashing/     M1  Linear probing, quadratic probing, chaining; collisions,
+                   probe sequence, delete
+  trees/       M4  Binary tree, BST, AVL (balance factor, LL/RR/LR/RL
+                   rotations), traversals (in/pre/post-order)
+  heaps/       M4  Min/Max heap, priority queue; insert, extract, peek,
+                   heapify, build heap
+  graphs/      M4  Adjacency list and matrix; vertex/edge operations; weights;
+                   directed/undirected; BFS and DFS
+
+src/engine/  (Layer B, no Qt) - M1
+----------------------------------------------------------------------
+  Step struct, OpType and semantic-role enums (the shared contract)
+  StepManager / ExecutionEngine: load, next, previous, reset, jumpTo
+  Playback clock, speed levels, fast-forward, skip-animation
+  Statistics counters (comparisons, swaps, assignments, accesses, iterations)
+  race/        RaceController: lockstep ticks, unequal step counts, per-pane
+               stats, comparison metrics
+  quiz/        QuizController, ScoreTracker
+  report/      ReportExporter (summary_report.md, optional PNG)
+  DECIDED: Race, Quiz and Report logic live in engine/ (Qt-free, M1 owns
+  them). Their screens live in ui/race and ui/quiz (M2). Use std::ofstream
+  for the report so the engine stays Qt-free. Tests go in tests/engine.
+
+src/plugin/  (Layer E) - M1
+----------------------------------------------------------------------
+  CustomAlgorithm, CustomStructure, PluginRegistry, PluginLoader,
+  PluginMetadata, adapters, malformed-step rejection, exception isolation
+  Open decision: QPluginLoader (compiled libraries) vs built-in registered
+  classes
+
+src/render/  (Layer C)
+----------------------------------------------------------------------
+  theme/       M2  Light, Dark, High-contrast, Color-blind-safe; role ->
+                   brush/pen/badge; non-color cues ([CMP] [SWP] [OK] [VIS]
+                   [PIV] [!], borders, hatching)
+  primitives/  M2  Shared drawing: cell, rounded box, circle, arrow, label;
+                   animation helpers (QPropertyAnimation groups)
+  array/       M3  Array model, ArrayRenderer (cells, index, i/j/mid pointers)
+  list/        M3  ListRenderer (boxes, arrows, NULL, head/tail/current)
+  linear/      M1  StackRenderer, QueueRenderer (TOP, FRONT, REAR arrows)
+  hash/        M1  HashRenderer (index column, slots, probe highlight)
+  tree/        M4  TreeRenderer (auto layout, no overlapping subtrees)
+  heap/        M4  HeapRenderer (tree and array views side by side)
+  graph/       M4  GraphRenderer (circle/force layout, draggable vertices,
+                   list-view fallback)
+  Rule: renderers never hard-code colors; they use Theme::role(...)
+
+src/ui/  (Layer D) - M2
+----------------------------------------------------------------------
+  (root)       MainWindow with docks, menus, status bar; home screen (card
+               grid, number keys); QStackedWidget navigation; canvas
+               (QGraphicsView, zoom/pan); playback toolbar; shortcuts
+  panels/      Algorithm list (QTreeWidget), info panel (complexity + live
+               stats), code view with current-line highlight, explanation bar
+  dialogs/     Input dialogs, validators (QValidator), inline errors,
+               help dialog (shortcuts, colors, pointers, controls)
+  race/        Race Mode split view, per-pane stats
+  quiz/        Quiz prompt and score screens
+
+tests/ (each member tests their own module)
+----------------------------------------------------------------------
+  Cases: empty, 1 element, 2 elements, sorted, reverse, duplicates,
+  target present/absent, empty/boundary insert/delete, invalid ops, rotations
+  Harness: Catch2 or GoogleTest (set up by M1 via CMake)
+
+docs/
+----------------------------------------------------------------------
+  report/       Report sections, split by module; M1 assembles
+  screenshots/  All themes, race, quiz, plugin; M2 handles themes,
+                others capture their own
+
+======================================================================
+CONTRACTS (freeze on Day 1)
+======================================================================
+  Step                 Single contract between algorithms, engine, renderers (M1)
+  Algorithm            virtual std::vector<Step> run(const Input&) = 0   (M1/M3/M4)
+  ExecutionEngine      load(steps), next(), previous(), reset(), jumpTo(i), signals (M1/M2)
+  IRenderer            applyStep(const Step&), undoStep(const Step&), reset()  (M2/M3/M4)
+  Theme                Theme::role(Role::Compared) -> brush, pen, badge  (M2)
+
+======================================================================
+NOTES
+======================================================================
+  - Every folder contains an empty .gitkeep so git tracks it. Delete a
+    folder's .gitkeep once real files are added (optional).
+  - Git workflow: one branch per module, merge by pull request.
+  - Future scope (Dijkstra, MST, more tree types) is intentionally excluded.
