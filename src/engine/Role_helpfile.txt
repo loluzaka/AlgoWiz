@@ -1,0 +1,99 @@
+==============================================================================
+Role.h — Helper
+==============================================================================
+
+PURPOSE
+-------
+Role names the SEMANTIC VISUAL STATE of an entity at a given step.
+It answers: "what should this look like right now?"
+Themes map Role -> colour/style; the renderer never hardcodes colours.
+
+Role is orthogonal to OpType:
+  OpType = what happened (event)
+  Role   = what it means visually (state)
+
+A Step carries a vector<Role>, usually parallel to the entities it
+touched. Entities not listed are assumed Role::Default.
+
+------------------------------------------------------------------------------
+KEYWORDS, IN ORDER
+------------------------------------------------------------------------------
+
+#ifndef ROLE_H
+    Include guard (see OpType.help.txt). Prevents double inclusion.
+
+#define ROLE_H
+    Defines the guard macro. Must match the #ifndef.
+
+enum class Role { ... };
+    Scoped enum — you write Role::Pivot, not Pivot. Strongly typed.
+    Prevents collision with OpType values of the same spelling
+    (both have Active/Compared conceptually).
+
+Default
+    No special meaning. The entity is in its resting visual state.
+    This is the implicit role for every entity not named in a Step.
+
+Compared
+    Entity is currently being inspected by a comparison.
+    Example: arr[i] and arr[i+1] during Bubble Sort's compare.
+
+Sorted
+    Entity is in its final, correct position. Sticky — once set it stays
+    set until the algorithm ends. Example: Bubble Sort's tail after pass k.
+
+Pivot
+    Entity is the pivot/partition element. Quicksort-specific but named
+    generically enough for any partitioning algorithm.
+
+Found
+    Entity is the search result. Example: binary search / BFS target hit.
+
+Active
+    Entity is currently in focus for the current operation (broader than
+    Compared — used when the algorithm is *about* to act on it).
+    Example: outer-loop index in selection sort before scanning.
+
+Current
+    The single entity the algorithm's cursor is on right now.
+    Distinguish from Active: Active may be a set; Current is always one.
+
+Candidate
+    Entity is a candidate for selection/min/max.
+    Example: heap-extract considers several candidates.
+
+Visited
+    Entity has been processed and will not be revisited.
+    BFS/DFS post-visit. Sticky.
+
+Queued
+    Entity is enqueued in an auxiliary structure (BFS queue, DFS stack).
+    Transient — becomes Visited when dequeued.
+
+Frontier
+    Entity is on the boundary of explored territory.
+    Distinguishes "queued but not yet visited" visually from Queued when
+    the theme wants to show the BFS wavefront separately.
+
+Path
+    Entity is on a path being traced.
+    Example: root-to-insert path during BST insert; DFS recursion stack.
+
+Error
+    Entity caused an error / invalid state.
+    Example: cycle detected, overflow, invariant violation.
+
+#endif
+    Closes the include guard.
+
+------------------------------------------------------------------------------
+WHY THESE AND NOT OTHERS
+------------------------------------------------------------------------------
+* Swapped (removed) was an event, not a state — moved to OpType.
+* Current / Candidate / Frontier / Path were added because the three
+  hand-traced paradigms each need a state the original list lacked:
+    - Current: cursor position (all three)
+    - Candidate: selection/heap algorithms
+    - Frontier: BFS wavefront
+    - Path: tree root-to-node traversal
+==============================================================================

@@ -1,0 +1,114 @@
+==============================================================================
+OpType.h — Helper
+==============================================================================
+
+PURPOSE
+-------
+OpType names WHAT ACTION an algorithm performed at a given step.
+It answers: "what happened?" — not "what does it look like?"
+Appearance lives in Role.h. The renderer keys its logic off OpType
+to know what kind of change to expect in a Step's deltas.
+
+Every Step carries exactly one OpType. OpType is a *cause*;
+Delta (in Step.h) is the *effect*.
+
+------------------------------------------------------------------------------
+KEYWORDS, IN ORDER
+------------------------------------------------------------------------------
+
+#ifndef OPTYPE_H
+    Include guard. Prevents the file from being included twice in one
+    translation unit (avoids duplicate enum definition errors).
+
+#define OPTYPE_H
+    Defines the guard macro named OPTYPE_H. Must match the #ifndef above.
+
+enum class OpType { ... };
+    'enum class' = scoped enumeration. Values are namespaced under OpType::,
+    so you write OpType::Compare, not just Compare. Prevents name collisions
+    with other enums (crucial: Role also has an "Active", etc.).
+    Strongly typed: an OpType cannot implicitly convert to int.
+
+Compare
+    Algorithm inspected two or more entities without mutating them.
+    Example: Bubble Sort's "is arr[i] > arr[i+1]?".
+    Deltas: typically empty; roles carry which indices are being compared.
+
+Swap
+    Two entities exchanged values/positions.
+    Example: Bubble Sort swaps arr[i] and arr[i+1].
+    Deltas: two ValueChange entries (or one Swap if you model it atomically).
+
+Assign
+    A single entity's value was overwritten.
+    Example: insertion sort shifting arr[j+1] = arr[j].
+    Deltas: one ValueChange.
+
+Insert
+    A value was inserted into an existing container (array shift or tree leaf).
+    Example: array insert at index k.
+    Deltas: ValueChanges for shifted elements + the inserted value.
+
+Delete
+    A value was removed from an existing container.
+    Example: array delete at index k.
+    Deltas: ValueChanges for shifted elements; removed index set to sentinel.
+
+NodeCreate
+    A new structural entity was created (tree/graph node).
+    Example: BST insertion allocates node id=4 for value 8.
+    Deltas: one NodeCreate with the new node's id.
+    Undo note: with pointer-rewind-only, deleted-then-recreated nodes are
+    handled by replaying forward from a keyframe — no resurrection needed.
+
+NodeDelete
+    A structural entity was destroyed.
+    Deltas: one NodeDelete. Children (if any) must be handled by the
+    algorithm's own subsequent EdgeRemove deltas — the Step does NOT
+    imply recursive deletion.
+
+EdgeAdd
+    A pointer/edge between two existing entities was established.
+    Example: BST sets parent.right = &node4.
+    Deltas: one EdgeAdd with target_id = source, edge_to = destination.
+
+EdgeRemove
+    A pointer/edge was severed (set to null).
+    Deltas: one EdgeRemove with target_id = source, edge_to = old destination.
+
+Mark
+    An auxiliary-structure flag was set on an entity.
+    Example: BFS marks a vertex visited.
+    Deltas: one RoleChange (old role -> Visited), or a dedicated flag delta
+    if you extend Delta::Kind. In this schema, use RoleChange.
+
+Unmark
+    An auxiliary-structure flag was cleared.
+    Example: backtracking un-marks a vertex.
+    Deltas: one RoleChange (Visited/Queued -> Default).
+
+Highlight
+    Pure visual emphasis. NO algorithmic state changed.
+    Example: "look here" narration moment.
+    Deltas: empty. Roles carry the emphasis. Safe to skip during replay.
+
+Note
+    Pure narration. NO state change at all.
+    Example: "Now we begin the outer loop."
+    Deltas: empty. Step::note carries the text. Safe to skip during replay.
+
+#endif
+    Closes the include guard.
+
+------------------------------------------------------------------------------
+WHY THESE AND NOT OTHERS
+------------------------------------------------------------------------------
+* MarkAsVisited (old name) was BFS-specific; Mark/Unmark generalize to any
+  auxiliary flag (visited, queued, in-stack, colored).
+* Swapped (old Role) belongs here as an OpType — it's an event, not a
+  persistent state.
+* Structural ops (NodeCreate/NodeDelete/EdgeAdd/EdgeRemove) are required
+  by the BST hand-trace; without them tree insert would be faked as
+  Insert+Assign and the renderer couldn't distinguish "appeared" from
+  "value changed".
+==============================================================================

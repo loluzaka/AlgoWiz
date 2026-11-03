@@ -1,0 +1,175 @@
+==============================================================================
+Step.h — Helper
+==============================================================================
+
+PURPOSE
+-------
+Defines the per-step record that the algorithm writes into a Timeline
+and the execution engine later replays. Schema supports POINTER-REWIND-ONLY
+undo: the engine never inverts a delta; it rewinds to the nearest keyframe
+and re-applies deltas forward. See "REWIND MODEL" at the bottom.
+
+------------------------------------------------------------------------------
+HEADER TOKENS
+------------------------------------------------------------------------------
+
+#ifndef STEP_H / #define STEP_H / #endif
+    Include guard (see OpType.help.txt).
+
+#include <vector>
+    For vector<>.
+#include <string>
+    For string.
+#include <cstdint>
+    For uint64_t.
+
+#include "OpType.h"
+    Pulls in OpType — required, Step::op is typed OpType.
+#include "Role.h"
+    Pulls in Role — required, Step::roles is vector<Role>.
+
+using namespace std;
+    Per project convention (owner request), we omit std:: prefixes.
+    Applied only inside this header; callers who include Step.h inherit
+    it for their TU. Accepted trade-off for brevity over hygiene.
+
+------------------------------------------------------------------------------
+struct Delta
+------------------------------------------------------------------------------
+
+struct Delta { ... };
+    One atomic change to the world. Applying this delta to the previous
+    state produces the next state (forward replay only).
+
+    With pointer-rewind-only, Delta does NOT store prev_value.
+    Replay is monotone forward from a keyframe; nothing is undone.
+
+enum class Kind { ... };
+    Scoped enum naming the sort of change. Switch on this in the replay
+    engine to apply the delta and in the renderer to highlight it.
+
+Kind::ValueChange
+    An entity's value changed.
+    Fields used: target_id, new_value.
+
+Kind::NodeCreate
+    A structural node was created. Fields: target_id.
+Kind::NodeDelete
+    A structural node was destroyed. Fields: target_id.
+Kind::EdgeAdd
+    An edge/pointer was added. Fields: target_id (source), edge_to (dest).
+Kind::EdgeRemove
+    An edge/pointer was removed. Fields: target_id, edge_to.
+Kind::RoleChange
+    An auxiliary flag changed (visited/queued). Fields: target_id,
+    new_value (role cast to int). Used for Mark / Unmark ops.
+
+Kind kind;
+    The tag selecting which fields below are meaningful.
+
+int target_id;
+    Primary entity affected. Interpretation depends on the container:
+      - arrays : index 0..n-1
+      - trees  : unique node id (int)
+      - graphs : vertex id
+    Convention: ids are opaque ints to Delta; container semantics live
+    in the algorithm and renderer, not here.
+
+int new_value;
+    New value for ValueChange / new role (as int) for RoleChange.
+    For other kinds: unspecified / 0.
+
+int edge_to = -1;
+    Destination entity for EdgeAdd / EdgeRemove. -1 = not applicable.
+    Default-initialised so uninitialized deltas fail loudly at render
+    rather than silently pointing at node 0.
+
+------------------------------------------------------------------------------
+struct Step
+------------------------------------------------------------------------------
+
+struct Step { ... };
+    One recorded moment in the algorithm. Emitted by the algorithm's run()
+    loop, stored in Timeline::steps, consumed by ExecutionEngine.
+
+uint64_t seq;
+    Monotonic per-timeline sequence number. Used for:
+      - stable ordering (vector index == seq is *not* guaranteed after
+        coalescing or compaction)
+      - debugging (step 4217 of 100k)
+      - race-mode alignment diagnostics
+    Not used to compute state.
+
+OpType op;
+    What happened (see OpType.help.txt). One op per step.
+    Mixed-op steps (e.g. compare-then-swap) must be split into two
+    consecutive Steps. Enables clean rendering and clean rewind.
+
+vector<Delta> deltas;
+    The forward-replay changes. Empty for OpType::Highlight and
+    OpType::Note (no state change). Order within the vector is
+    significant — replay applies left to right. Do not sort.
+
+vector<Role> roles;
+    Semantic visual roles active at this moment. Typically parallel
+    to the entities touched by deltas, but may include entities not
+    in deltas (e.g. Highlight step: empty deltas, non-empty roles).
+    Entities absent from this vector are Role::Default.
+
+string note;
+    Human-readable narration text. EMPTY STRING == no narration
+    (per owner constraint: no optional<>). Renderer shows an overlay
+    only when !note.empty(). Replay engine ignores this field entirely
+    (note does not affect state).
+
+float progress;
+    0.0–1.0, fraction of the algorithm's work completed *at this step*.
+    Used only by race mode to play two Timelines in visual lockstep.
+    Lockstep-by-index compares unrelated points (Bubble Sort step 50 !=
+    Quick Sort step 50); lockstep-by-progress is honest. Algorithm is
+    responsible for emitting a meaningful value (e.g. swaps_done /
+    total_swaps) — the engine does not infer it.
+
+------------------------------------------------------------------------------
+struct Timeline
+------------------------------------------------------------------------------
+
+struct Timeline { ... };
+    One algorithm run, in full. For race mode, keep two Timelines.
+
+string algorithm;
+    Name of the algorithm ("bubble_sort", "bst_insert", ...).
+    Was previously duplicated on every Step; hoisted here because a
+    Timeline belongs to exactly one algorithm. Renderer reads it once.
+
+vector<Step> steps;
+    Ordered step log. steps[i].seq must be strictly increasing (assert
+    in debug builds).
+
+------------------------------------------------------------------------------
+REWIND MODEL (why no prev_value)
+------------------------------------------------------------------------------
+Undo strategy: POINTER REWIND ONLY.
+The engine keeps sparse keyframes: vector<pair<size_t, vector<int>>>
+(step_index, full state snapshot) every K steps and at the last step.
+
+  render_at(i):
+      kf = latest keyframe with index <= i
+      state = copy of kf.snapshot
+      for s in steps[kf+1 .. i]:
+          for d in s.deltas: apply_forward(state, d)
+      return state
+
+  step_backward(): i -= 1; render_at(i)      // no inverse needed
+  step_forward():  i += 1; render_at(i)      // or apply one delta to cache
+
+Consequences for this schema:
+  * Delta has NO prev_value. Forward replay never needs the old value.
+  * NodeDelete is safe: replaying forward from an earlier keyframe simply
+    never creates the node, so no resurrection is required. (True-inverse
+    would have needed the deleted subtree recorded — this schema avoids
+    that complexity deliberately.)
+  * Cost of a rewind is O(K) delta applications. Choose K to balance
+    keyframe memory vs. rewind latency.
+
+==============================================================================
