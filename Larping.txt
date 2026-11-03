@@ -1,0 +1,92 @@
+THINKING PROCESS
+The point of this file is to keep track of every decision we make and why, so when we reveiw, stuff is clear. Mentionn ur name and timestamp for every session.
+
+HUZAYFA Session 1
+11:07
+Gping over the OpType, Role, and Step headers today and get them solid enough to survive BST and graph tracing. no engine code, just fixing the basics.
+
+11:09
+Okay so first rereading the arch doc, the "algorithms are recorders" conept where they run, store every moment into a `vector<Step>`, and the engine just plays it back. Preparing the header files for the same.
+On "delta": a delta is just the change between two states, instead of storing the global state at every step (a full snapshot), we store only what changed, like previous and new values. So each `Step` should carry the diff (what field changed, old value, new value) rather than a copy of the entire data structure.
+
+11:11
+Step.h first draft: just thikning: not aligning to the specs rn.
+
+    struct Step {
+        vector<int> state;
+        vector<int> active_indices;
+        vector<int> helper_str;
+        string algo;
+    };
+
+state is a full global state, not the just change 'delta'.
+
+no OpType in Step. It shows what the world looks like but not what happened, so no narration, no clean undo, no race alignment.
+
+no Role. active indices are just integers instead of specs.
+
+no sequence order, no progress. 
+
+11:14
+DECISION: Step stores a sequence frame + delta model, not full snapshots.
+
+Options I considered:
+  a) keep full snapshots. Simple to render, but memory explodes and it
+     contradicts the doc.
+  b) pure deltas, no snapshots. Memory tiny, but stepping backward means
+     replaying from step 0 every time. Terrible.
+  c) keyframes every K steps + deltas in between. Memory bounded by K
+     and by number of keyframes, rewind cost bounded by K.
+
+going with (c): keyframes every K steps plus deltas in between — bounded memory, rewind cost capped at K, and it's the standard undo-timeline pattern.
+
+also, for going bac, deltas only need to replay forward from the nearest keyframe, so they don't have to be self-sufficient — much simpler contract to write
+
+11:16 
+OpType reworked: killed the BFS-specific visited value, added node/edge create-delete, added Note for teaching mode. Node/edge stuff was the real call, rest was mechanical.
+
+11:19 
+Same for Role but found Swapped is an event not a state, so it goes. Added Current, Candidate, Frontier, Path.
+
+11:22 
+Undo = pointer rewind only, no inverse deltas. Kills the nasty node-delete inverse problem. Means deltas drop the old-value field.
+
+11:28 
+Moved the algorithm name out of each step into a timeline wrapper. Kills redundancy and gives race mode a clean unit.
+
+11:30 
+Added a progress float per step so race mode compares fraction-done, not step index, which would be meaningless across algos.
+
+11:47
+Overviewing all three, looks ok. Leaving them alone unless something breaks.
+
+AI GENERATED WORKFLOW 
+==============================================================================
+
+algorithm.run()  -->  emits  -->  Step { op, deltas, roles, note, progress }
+                                         |
+                                         v
+                                  Timeline.steps
+                                         |
+                                         v
+                             ExecutionEngine.render_at(i)
+                                         |
+                          keyframe + forward-apply deltas
+                                         |
+                                         v
+                               world state  +  Step.roles
+                                         |
+                                         v
+                                    Renderer
+                              (theme: Role -> colour)
+
+THREE-WAY SEPARATION OF CONCERNS
+  OpType = cause        (what happened)
+  Delta  = effect       (what changed)
+  Role   = appearance   (what it means visually)
+
+UNDO = engine concern only. Headers above assume pointer-rewind-only;
+the algorithm never emits inverse deltas and never stores prev values.
+
+==============================================================================
+HUZAYFA sesion 1 end. 1153
