@@ -1,0 +1,28 @@
+ALGO VISUALIZER | TREES > AVL TREE                                                      STEP 19 / 24
+----------------------------------------------------------------------------------------------------
+AVL Tree                                                           |INFORMATION
+                                                                   |AVL Tree
+  (10)                                                             |Best:    O(log n)
+  bf=-2                                                            |Average: O(log n)
+^cur,root                                                          |Worst:   O(log n)
+   [!]                                                             |Space:   O(n)
+     \____                                                         |
+          \                                                        |STATISTICS
+        (20)                                                       |Step: 19 / 24
+        bf=-1                                                      |[###################-----] 79%
+                                                                   |Comparisons:                   3
+                                                                   |Accesses:                      6
+           \____                                                   |Pointer moves:                 5
+                \                                                  |
+              (30)                                                 |Recorded in 0.08 ms
+              bf=0                                                 |
+                                                                   |
+                                                                   |
+                                                                   |
+----------------------------------------------------------------------------------------------------
+CURRENT OPERATION  HIGHLIGHT on position 0
+Update node 10: height = 3, balance factor = 0 - 2 = -2. |bf| > 1: the tree is unbalanced here!
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed
+[F] Fast  [K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                   Speed: Normal   Theme: Monochrome

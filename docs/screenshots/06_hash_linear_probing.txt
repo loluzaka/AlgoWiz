@@ -1,0 +1,30 @@
+ALGO VISUALIZER | HASHING > HASH TABLE - LINEAR PROBING                                            STEP 6 / 12
+--------------------------------------------------------------------------------------------------------------
+Hash table  (hash(key) = key mod 5)                                          |INFORMATION
+idx                                                                          |Hash Table - Linear Probing
+ 0  |  .  |                                                                  |Best:    O(1)
+ 1  | 21  | [ACT]                                                            |Average: O(1)
+ 2  | 41  |                                                                  |Worst:   O(n)
+ 3  |  .  |                                                                  |Space:   O(m + n)
+ 4  |  .  |                                                                  |
+                                                                             |STATISTICS
+                                                                             |Step: 6 / 12
+                                                                             |[############------------] 50%
+                                                                             |Inserts:                       1
+                                                                             |Hash calcs:                    2
+                                                                             |Collisions:                    1
+                                                                             |Probes:                        2
+                                                                             |
+                                                                             |Recorded in 0.43 ms
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  HASH on position 1
+hash(51) = 51 mod 5 = 1.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                             Speed: Normal   Theme: Monochrome

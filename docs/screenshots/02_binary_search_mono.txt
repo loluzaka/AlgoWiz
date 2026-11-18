@@ -1,0 +1,30 @@
+ALGO VISUALIZER | SEARCHING > BINARY SEARCH                                                        STEP 7 / 14
+--------------------------------------------------------------------------------------------------------------
+Array                                                                        |INFORMATION
+   0       1       2       3       4       5       6       7                 |Binary Search
++-----+ +-----+ +-----+ +-----+ +-----+ +-----+ +-----+ +-----+              |Best:    O(1)
+|  1  | |  3  | |  5  | |  7  | |  9  | | 11  | | 13  | | 15  |              |Average: O(log n)
++-----+ +-----+ +-----+ +-----+ +-----+ +-----+ +-----+ +-----+              |Worst:   O(log n)
+  ^lo                    ^mid                             ^hi                |Space:   O(1)
+ [ELM]   [ELM]   [ELM]   [ELM]                                               |
+                                                                             |STATISTICS
+                                                                             |Step: 7 / 14
+                                                                             |[############------------] 50%
+                                                                             |Comparisons:                   1
+                                                                             |Accesses:                      2
+                                                                             |Iterations:                    1
+                                                                             |Pointer moves:                 3
+                                                                             |
+                                                                             |Recorded in 27.13 ms
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  MARK on positions 0, 1, 2, 3
+Target 11 is greater than 7, so the left half can be discarded.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                             Speed: Normal   Theme: Monochrome

@@ -1,0 +1,26 @@
+ALGO VISUALIZER | QUEUE > CIRCULAR QUEUE                                                  STEP 6 / 6
+----------------------------------------------------------------------------------------------------
+Circular queue (capacity 4)                                        |INFORMATION
+   0       1       2       3                                       |Circular Queue
++-----+ +-----+ +-----+ +-----+                                    |Best:    O(1)
+|  9  | |  2  | |  3  | |  4  |                                    |Average: O(1)
++-----+ +-----+ +-----+ +-----+                                    |Worst:   O(1)
+ ^REAR  ^FRONT                                                     |Space:   O(n)
+ [SWP]                                                             |
+                                                                   |STATISTICS
+FRONT = 1    REAR = 0                                              |Step: 6 / 6
+FRONT removes, REAR adds; both indexes wrap around.                |[########################] 100%
+                                                                   |Comparisons:                   2
+                                                                   |Accesses:                      4
+                                                                   |Inserts:                       1
+                                                                   |Deletes:                       1
+                                                                   |Pointer moves:                 1
+                                                                   |
+                                                                   |Recorded in 0.05 ms
+----------------------------------------------------------------------------------------------------
+CURRENT OPERATION  INSERT on position 0
+Store 9 at index 0.  [end of execution]
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed
+[F] Fast  [K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                   Speed: Normal   Theme: Monochrome

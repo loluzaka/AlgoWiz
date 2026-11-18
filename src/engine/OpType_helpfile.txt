@@ -112,3 +112,23 @@ WHY THESE AND NOT OTHERS
   Insert+Assign and the renderer couldn't distinguish "appeared" from
   "value changed".
 ==============================================================================
+==============================================================================
+AMENDMENT (contract amendment, see Documentation/Member_1/Development_Log.md)
+==============================================================================
+Appended AFTER Note (original order untouched):
+  Access       one read of one entity (a search inspected a cell)
+  PointerMove  a labelled pointer (i, j, mid, HEAD, TOP, FRONT ...) moved
+  VisitNode    traversal visited a node / vertex
+  VisitEdge    traversal explored an edge
+  Rotate       AVL rotation (LL, RR, LR, RL)
+  Hash         a hash function was evaluated
+  Collision    a hash slot was already occupied
+  Probe        one probe of an open-addressing sequence
+  Heapify      a heapify / sift step
+  Partition    quick sort / quick select partition boundary
+  Merge        merge-sort merge of two runs
+  Iterate      start of a new pass / iteration / digit
+Why: spec section 7 lists these events and section 25 needs rotations, collisions,
+probes and hash calculations as statistics. Statistics are DERIVED from OpType
+(src/engine/Statistics.h), so an algorithm never reports numbers by hand.
+Full per-keyword explanation: Documentation/Member_1/Help_Files/OpType_help.md

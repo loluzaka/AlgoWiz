@@ -173,3 +173,23 @@ Consequences for this schema:
     keyframe memory vs. rewind latency.
 
 ==============================================================================
+==============================================================================
+AMENDMENT (contract amendment) - what changed in Step.h and why
+==============================================================================
+Audit findings fixed (see Documentation/Project_Wide/Technical_Decisions.md):
+ 1. Step::roles was vector<Role> with no target  -> vector<RoleTag>{target_id, role, container}
+ 2. Delta was integer-only                        -> Delta::text (strings, labels, pointer names)
+ 3. Edges had no left/right/next/prev             -> enum Slot + Delta::slot
+ 4. No lane for auxiliary arrays                  -> Delta::container, Timeline::containerNames
+ 5. Pointers (i, j, HEAD, TOP ...)                -> Delta::Kind::PointerSet
+ 6. Edge weights                                  -> Delta::weight (default 1)
+ 7. Array length / capacity                       -> Delta::Kind::Resize ; Kind::Clear ; Kind::Label
+ 8. No initial state                              -> Timeline::initial (deltas applied to an empty world)
+ 9. Fields were uninitialised                     -> default member initialisers everywhere
+10. progress had to be computed by every author   -> default -1, finalizeTimeline() fills (i+1)/n
+11. Code-line reference (spec 35)                 -> Step::codeLine (index into AlgorithmInfo::pseudocode)
+12. Renderer selection                            -> Timeline::structure (enum StructureKind)
+Statistics impact is intentionally NOT a field: it is derived from Step::op.
+Static factories (Delta::value, edgeAdd, mark ...) make steps readable.
+Everything is still replayed FORWARD ONLY from keyframes (pointer rewind, no inverse deltas).
+Full explanation: Documentation/Member_1/Help_Files/Step_help.md

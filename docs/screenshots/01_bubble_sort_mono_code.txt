@@ -1,0 +1,32 @@
+ALGO VISUALIZER | SORTING > BUBBLE SORT                                                                      STEP 6 / 25
+------------------------------------------------------------------------------------------------------------------------
+Array                                                                            |INFORMATION
+   0       1       2       3       4                                             |Bubble Sort
++-----+ +-----+ +-----+ +-----+ +-----+                                          |
+|  2  | |  5  | |  1  | |  8  | |  4  |                                          |STATISTICS
++-----+ +-----+ +-----+ +-----+ +-----+                                          |Step: 6 / 25
+                                                                                 |[#######-----------------------] 24%
+                 [SWP]   [SWP]                                                   |Comparisons:                         3
+                                                                                 |Swaps:                               2
+                                                                                 |Accesses:                           14
+                                                                                 |Iterations:                          1
+                                                                                 |
+                                                                                 |Recorded in 1.56 ms
+                                                                                 |
+                                                                                 |CODE / PSEUDOCODE
+                                                                                 |for i = 0 .. n-2:
+                                                                                 |  swapped = false
+                                                                                 |  for j = 0 .. n-i-2:
+                                                                                 |    if a[j] > a[j+1]: swap(a[j], a[j+
+                                                                                 |  a[n-i-1] is now sorted
+                                                                                 |  if not swapped: stop
+                                                                                 |
+                                                                                 |
+                                                                                 |
+------------------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  SWAP on positions 2, 3
+Swap 8 and 1.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast  [K] Skip
+[I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                                       Speed: Normal   Theme: Monochrome

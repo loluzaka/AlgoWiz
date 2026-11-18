@@ -1,0 +1,30 @@
+ALGO VISUALIZER | LINKED LISTS > SINGLY LINKED LIST                                                 STEP 4 / 5
+--------------------------------------------------------------------------------------------------------------
+Singly Linked List                                                           |INFORMATION
+                                                                             |Singly Linked List
++----+     +----+     +----+     +----+                                      |Best:    O(1) at head
+| 10 | --> | 15 | --> | 20 | --> | 30 | NULL                                 |Average: O(n)
++----+     +----+     +----+     +----+                                      |Worst:   O(n)
+^HEAD,cur   ^new                 ^TAIL                                       |Space:   O(n)
+[PTH]      [ACT]                                                             |
+                                                                             |STATISTICS
+                                                                             |Step: 4 / 5
+                                                                             |[###################-----] 80%
+                                                                             |Nodes visited:                 1
+                                                                             |
+                                                                             |Recorded in 0.46 ms
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  EDGE_ADD on positions 0, 3
+Node 15 is inserted between 10 and 20. The next pointer of 10 is changed to 15.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                             Speed: Normal   Theme: Monochrome

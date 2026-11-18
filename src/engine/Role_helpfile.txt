@@ -97,3 +97,20 @@ WHY THESE AND NOT OTHERS
     - Frontier: BFS wavefront
     - Path: tree root-to-node traversal
 ==============================================================================
+==============================================================================
+AMENDMENT (contract amendment)
+==============================================================================
+Appended AFTER Error (original order untouched):
+  Moved       value just swapped / shifted / written        badge [SWP]
+  Collision   hash slot that caused a collision             badge [COL]
+  Eliminated  part of a search range that was discarded     badge [ELM]
+  Range       live search range / partition boundary        badge [RNG]
+  NotFound    a search that failed                          badge [NF]
+  GroupA      left run / left partition / first group       badge [A]
+  GroupB      right run / right partition / second group    badge [B]
+Why: the [SWP] badge and the "mutated / conflict / discarded / failure" rows of the
+section 31 colour table had no role. "Swapped" stays an OpType (an event); "Moved" is
+the STATE of the cells it touched.
+Two lifetimes of a role: transient = Step::roles (only that step);
+persistent = Delta::mark -> WorldState marks (Sorted, Visited ...).
+Full explanation: Documentation/Member_1/Help_Files/Role_help.md

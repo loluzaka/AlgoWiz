@@ -1,0 +1,32 @@
+ALGO VISUALIZER | SORTING > MERGE SORT                                                            STEP 12 / 33
+--------------------------------------------------------------------------------------------------------------
+Array                                                                        |INFORMATION
+   0       1       2       3       4                                         |Merge Sort
++-----+ +-----+ +-----+ +-----+ +-----+                                      |Best:    O(n log n)
+|  2  | |  6  | |  9  | |  4  | |  7  |                                      |Average: O(n log n)
++-----+ +-----+ +-----+ +-----+ +-----+                                      |Worst:   O(n log n)
+                                                                             |Space:   O(n)
+                                                                             |
+Temporary                                                                    |STATISTICS
+   0       1       2       3       4                                         |Step: 12 / 33
++-----+ +-----+ +-----+ +-----+ +-----+                                      |[#########---------------] 36%
+|  2  | |  6  | |  9  | |     | |     |                                      |Comparisons:                   3
++-----+ +-----+ +-----+ +-----+ +-----+                                      |Assignments:                   3
+                                                                             |Accesses:                     12
+         [CMP]   [CMP]                                                       |
+                                                                             |Recorded in 0.74 ms
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  COMPARE on positions 1, 2
+Compare 6 (left run) with 9 (right run): take the left one.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                             Speed: Normal   Theme: Monochrome

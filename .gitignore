@@ -1,0 +1,9 @@
+# build output and run-time files
+build/
+algoviz.ini
+summary_report*.md
+*.o
+*.d
+*.exe
+*.dll
+*.so

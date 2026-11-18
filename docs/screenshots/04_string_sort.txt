@@ -1,0 +1,30 @@
+ALGO VISUALIZER | SORTING > INSERTION SORT (STRINGS)                                               STEP 5 / 17
+--------------------------------------------------------------------------------------------------------------
+Words                                                                        |INFORMATION
+     0           1           2                                               |Insertion Sort (strings)
++---------+ +---------+ +---------+                                          |Best:    O(n)
+| apricot | |  apple  | |   ape   |                                          |Average: O(n^2)
++---------+ +---------+ +---------+                                          |Worst:   O(n^2)
+               ^key                                                          |Space:   O(1)
+   [CMP]                                                                     |
+                                                                             |STATISTICS
+                                                                             |Step: 5 / 17
+                                                                             |[#######-----------------] 29%
+                                                                             |Comparisons:                   1
+                                                                             |Accesses:                      2
+                                                                             |Iterations:                    1
+                                                                             |Pointer moves:                 1
+                                                                             |
+                                                                             |Recorded in 0.57 ms
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+                                                                             |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  COMPARE on position 0
+Compare "apricot" with key "apple": it must move right.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                                             Speed: Normal   Theme: Monochrome

@@ -1,0 +1,30 @@
+ALGO VISUALIZER | GRAPHS > GRAPH (BFS / DFS)                                                       STEP 9 / 43
+--------------------------------------------------------------------------------------------------------------
+Undirected graph - view: drawing   (V = change view)                         |INFORMATION
+                                                                             |Graph (BFS / DFS)
+                                                                             |Best:    O(V + E) traversal
+                                 (A)\\--                                     |Average: O(V + E)
+                                [VIS] \\------ 4                             |Worst:   O(V + E)
+                                        \\    -------                        |Space:   O(V + E) list / O(V^2)
+         (F)\\                            \\         --//(B)                 |
+              \\                            \\ 2     //  [Q]                 |STATISTICS
+                \\                            \\\  //                        |Step: 9 / 43
+                  \\                             //                          |[#####-------------------] 20%
+                    \\\3                       5/  \\                        |Inserts:                       2
+                       \\                   ///      \\                      |Deletes:                       1
+         (E)-------------\\--------7---------------------(C)                 |Nodes visited:                 1
+                           \\           //     1-----   [FRN]                |Edges explored:                2
+                             \\       //-------                              |
+                               \\(D)----                                     |Recorded in 0.23 ms
+                                                                             |
+                                                                             |
+                                                                             |
+Queue / stack                                                                |
+   0                                                          v more (Down)  |
+--------------------------------------------------------------------------------------------------------------
+CURRENT OPERATION  MARK on position 2
+Mark C as discovered.
+
+[P] Play  [Space] Pause/Resume  [N/Right] Next  [B/Left] Previous  [R] Reset  [J] Jump  [S] Speed  [F] Fast
+[K] Skip  [I] Input  [C] Code  [V] View  [T] Theme  [E] Export  [H] Help  [Q] Back
+                                                             Speed: Normal   Theme: Monochrome   View: drawing
